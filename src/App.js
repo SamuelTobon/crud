@@ -8,13 +8,26 @@ function App() {
   const [tasks, setTasks] = useState([])
   const [editMode, setEditMode] = useState(false)
   const [id, setId] = useState("")
+  const [error, setError] = useState(null)
+
+  const validForm =( )=> {
+    let isValid = true
+    setError(null)
+
+    if (isEmpty(task)){
+      setError("Please add task...")
+      isValid = false
+    }
+    return isValid
+  }
 
   const addTask = (e )=>{
     e.preventDefault()
-    if (isEmpty(task)){
-      console.log("Task empty")
+
+    if (!validForm()){
       return
     }
+    
     const newTask = {
       id: shortid.generate(),
       name: task
@@ -25,8 +38,8 @@ function App() {
   }
   const saveTask = (e )=>{
     e.preventDefault()
-    if (isEmpty(task)){
-      console.log("Task empty")
+
+    if (!validForm()){
       return
     }
    
@@ -54,17 +67,15 @@ function App() {
         <dib className="col-8">
           <h4 className="text-center">List of Homework</h4>
           {
-            size(tasks) == 0  ? (
-            <h5 className="text-center">NO TASKS</h5>
-            ):(
-
-            
+            size(tasks) === 0  ? (
+            <hs className="text-center">NO TASKS</hs>
+            ):(            
           <ul className="list-group">
           {
             tasks.map((task)=>(
           <li className="list-grup-item" key={task.id}>
             <span className="lead">{task.name}</span>
-            
+
             <button
              className="btn btn-danger btn-sm float-right"
              onClick={()=> deleteTask(task.id)}>               
@@ -98,6 +109,9 @@ function App() {
           onChange={(text)=>setTask(text.target.value)}
           value={task}
           />
+          {
+            error && <span className="text-danger">{error}</span>
+          }
           <button className={  editMode ?
              "btn btn-warning btn-block" : "btn btn-dark btn-block"
           }
